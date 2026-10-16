@@ -1606,8 +1606,11 @@ mod tests {
         guard.remove("AGENT_BROWSER_NAMESPACE");
 
         let session = "race-config";
+        // The loser must differ from the winner on a field that is part of the fingerprint:
+        // the idle timeout is deliberately not one of them, so varying it here would make the two
+        // configs match and the test would prove nothing.
         let winner_opts = test_daemon_options(Some("1000"), false, None);
-        let loser_opts = test_daemon_options(Some("2000"), false, None);
+        let loser_opts = test_daemon_options(Some("1000"), true, None);
 
         fs::create_dir_all(get_socket_dir()).unwrap();
         fs::write(get_pid_path(session), "12345").unwrap();
